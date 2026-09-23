@@ -1,7 +1,10 @@
 // s1/Conta.js — v2: encapsulamento
+
+import { Extrato } from './Extrato.js'; // importa a classe Extrato
+
 // usa export para poder importar em outro arquivo
 export class Conta {
-
+  #extrato;
   // para torna o campo privado, basta colocar # antes do nome do atributo. A partir de agora, só o código DENTRO desta classe enxerga este campo
   #saldo = 0; // campo privado: só o código DENTRO desta classe enxerga
   #titular;
@@ -13,6 +16,7 @@ export class Conta {
     }
     this.numero = numero;
     this.titular = titular; // passa pelo setter, que valida o tipo de dado
+    this.#extrato = new Extrato(); // composição: a Conta TEM UM Extrato
   }
   
   // getter: leitura liberada. Não há setter: escrever, só por depositar/sacar
@@ -22,6 +26,10 @@ export class Conta {
 
   get titular() {
     return this.#titular;
+  }
+
+  get extrato() {
+    return this.#extrato.listar(); // devolve uma cópia do extrato, para ninguém alterar o original por fora
   }
 
   // setter: escrita liberada, mas com regra
@@ -37,11 +45,13 @@ export class Conta {
     // também precisam ser barrados, e NaN <= 0 é false.
     if (!(valor > 0)) throw new Error('Depósito deve ser positivo');
     this.#saldo += valor;
+    this.#extrato.registrar('depósito', valor); // registra o depósito no extrato
   }
 
   sacar(valor) {
     if (!(valor > 0)) throw new Error('Saque deve ser positivo');
     if (valor > this.saldoDisponivel()) throw new Error('Saldo insuficiente');
+    this.#extrato.registrar('saque', valor); // registra o saque no extrato
     this.#saldo -= valor;
   }
 

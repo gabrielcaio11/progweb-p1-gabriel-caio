@@ -21,6 +21,9 @@ function fecharMes(listaDeContas) {
 
 fecharMes(contas);
 
+console.log('Extrato da Conta Corrente: ', contas[0].extrato);
+console.log('Extrato da Conta Poupança: ', contas[1].extrato);
+
 // A abstração protegida: ninguém cria uma "conta genérica"
 try {
   new Conta('0003', 'Carla Dias');
