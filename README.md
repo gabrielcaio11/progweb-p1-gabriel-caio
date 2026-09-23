@@ -1,6 +1,6 @@
 # Projeto 1 — Programação Web (UEPB · 2026.2)
 
-**Aluno(a):** Seu Nome Completo
+**Aluno(a):** Gabriel Caio da Silva Vieira
 **Disciplina:** Programação Web · Prof. Rodrigo Alves Costa
 
 ## Sobre
