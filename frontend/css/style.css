@@ -1,0 +1,4 @@
+body { min-height: 100vh; }
+td { vertical-align: middle; }
+tr.editando > td { background-color: var(--bs-warning-bg-subtle); }
+.numero { font-variant-numeric: tabular-nums; }
