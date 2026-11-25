@@ -35,6 +35,33 @@ export const avaliacaoService = {
   },
 
   atualizar(id, dados = {}) {
+    const atual = avaliacaoModel.buscarPorId(Number(id));
+    if (!atual) throw erro(404, 'Avaliação não encontrada');
+
+    const novoLivroId = dados.livroId === undefined
+      ? atual.livroId
+      : Number(dados.livroId);
+    const novoUsuarioId = dados.usuarioId === undefined
+      ? atual.usuarioId
+      : Number(dados.usuarioId);
+    const novaNota = dados.nota === undefined ? atual.nota : Number(dados.nota);
+
+    if (novaNota < 1 || novaNota > 5) {
+      throw erro(400, 'A nota deve estar entre 1 e 5');
+    }
+
+    if (!livroModel.buscarPorId(novoLivroId)) {
+      throw erro(422, 'Livro informado não existe');
+    }
+
+    const existente = avaliacaoModel.buscarPorUsuarioELivro(
+      novoUsuarioId,
+      novoLivroId,
+    );
+    if (existente && existente.id !== Number(id)) {
+      throw erro(409, 'Este usuário já avaliou este livro');
+    }
+
     const atualizada = avaliacaoModel.atualizar(id, dados);
     if (!atualizada) throw erro(404, 'Avaliação não encontrada');
     return atualizada;

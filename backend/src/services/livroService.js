@@ -1,4 +1,5 @@
 import { livroModel } from '../models/livroModel.js';
+import { avaliacaoModel } from '../models/avaliacaoModel.js';
 import { erro } from '../utils/erro.js';
 
 export const livroService = {
@@ -25,12 +26,21 @@ export const livroService = {
   },
 
   atualizar(id, dados = {}) {
+    if (dados.isbn) {
+      const existente = livroModel.buscarPorIsbn(dados.isbn);
+      if (existente && existente.id !== Number(id)) {
+        throw erro(409, 'Já existe um livro com este ISBN');
+      }
+    }
     const atualizado = livroModel.atualizar(id, dados);
     if (!atualizado) throw erro(404, 'Livro não encontrado');
     return atualizado;
   },
 
   remover(id) {
+    if (avaliacaoModel.listarPorLivro(Number(id)).length > 0) {
+      throw erro(409, 'Livro possui avaliações. Remova as avaliações primeiro.');
+    }
     const removido = livroModel.remover(id);
     if (!removido) throw erro(404, 'Livro não encontrado');
   },
